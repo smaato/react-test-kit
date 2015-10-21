@@ -66,14 +66,14 @@ const testCase = new ContainerTestCase(TestContainer, {
 });
 
 describe('Props', () => {
-  testCase.testProps([
+  testCase.expectProps([
     'prop1',
     'prop2',
   ]);
 });
 
-describe('Actions', () => {
-  testCase.testActions([
+describe('Action creators', () => {
+  testCase.expectActionCreators([
     'action1',
     'action2',
   ]);
@@ -124,7 +124,7 @@ it('asserts that asynchronous actions are created in sequence', (done) => {
     type: 'B',
   }];
   const store = new MockedStore();
-  store.test(actionCreator(), expectedActions, done);
+  store.expectActionsFromCreator(actionCreator(), expectedActions, done);
 });
 
 it('references the mocked state object', (done) => {
@@ -140,7 +140,7 @@ it('references the mocked state object', (done) => {
     payload: state.prop,
   }];
   const store = new MockedStore(state);
-  store.test(actionCreator(), expectedActions, done);
+  store.expectActionsFromCreator(actionCreator(), expectedActions, done);
 });
 ```
 

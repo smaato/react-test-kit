@@ -28,14 +28,14 @@ describe('ContainerTestCase', () => {
   });
 
   describe('Props', () => {
-    testCase.testProps([
+    testCase.expectProps([
       'prop1',
       'prop2',
     ]);
   });
 
-  describe('Actions', () => {
-    testCase.testActions([
+  describe('Action creators', () => {
+    testCase.expectActionCreators([
       'action1',
       'action2',
     ]);

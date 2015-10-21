@@ -48,7 +48,7 @@ export default class MockedStore {
     this.getState = getState;
   }
 
-  test(actionCreator, expectedActions, done) {
+  expectActionsFromCreator(actionCreator, expectedActions, done) {
     this.store = mockStore(this.getState, expectedActions, done);
     this.store.dispatch(actionCreator);
   }

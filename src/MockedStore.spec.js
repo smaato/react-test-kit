@@ -20,7 +20,7 @@ describe('MockedStore', () => {
         type: 'B',
       }];
       const store = new MockedStore();
-      store.test(actionCreator(), expectedActions, done);
+      store.expectActionsFromCreator(actionCreator(), expectedActions, done);
     });
 
     it('calls the done callback when the actions are complete', (done) => {
@@ -36,7 +36,7 @@ describe('MockedStore', () => {
       const doneSpy = jasmine.createSpy('done').and.callFake(() => {
         done();
       });
-      store.test(actionCreator(), expectedActions, doneSpy);
+      store.expectActionsFromCreator(actionCreator(), expectedActions, doneSpy);
       expect(doneSpy).toHaveBeenCalled();
     });
 
@@ -53,7 +53,7 @@ describe('MockedStore', () => {
         payload: state.prop,
       }];
       const store = new MockedStore(state);
-      store.test(actionCreator(), expectedActions, done);
+      store.expectActionsFromCreator(actionCreator(), expectedActions, done);
     });
   });
 });
