@@ -4,7 +4,6 @@
  */
 
 var gulp = require('gulp');
-var browserify = require('browserify');
 var eslint = require('gulp-eslint');
 var KarmaServer = require('karma').Server;
 var watch = require('gulp-watch');
@@ -14,9 +13,6 @@ var watch = require('gulp-watch');
  */
 
 var config = {
-  browserify: {
-    debug: true
-  },
   karma: {
     configFile: __dirname + '/karma.conf.js',
     singleRun: true
@@ -50,7 +46,6 @@ gulp.task('lint', function() {
   ])
   .pipe(eslint())
   .pipe(eslint.format())
-  .pipe(eslint.failAfterError())
   .on('error', function(error) {
     throw 'Linting failed';
   });
