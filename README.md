@@ -7,6 +7,10 @@
 
 - Node 4.1.0
 - Browserify with the Babelify transform
+- Jasmine (for some tools, see below)
+- React, react-dom, react-addons-test-utils
+- Redux, redux-thunk, react-redux
+- Sizzle
 
 ## Getting Started
 
@@ -38,6 +42,9 @@ import {
 
 Use this class to test that Redux `container` classes are providing the right
 properties and actions.
+
+Note: This class dynamically creates its own Jasmine assertions (so it
+depends upon Jasmine).
 
 ```javascript
 // Given a Container that looks like this:
