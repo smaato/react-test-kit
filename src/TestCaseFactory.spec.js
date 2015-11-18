@@ -15,20 +15,17 @@ describe('TestCaseFactory', () => {
     }
     render() {
       return (
-        <div className="outer" onClick={this.props.onClick}>
-          <div className="inner">Hello</div>
+        <div>
+          <div>Hello</div>
           {this.props.content}
         </div>
       );
     }
   }
 
-  const StatelessTestElement = (props) => {
+  const StatelessTestElement = () => {
     return (
-      <div className="outer" onClick={props.onClick}>
-        <div className="inner">Hello</div>
-        {props.content}
-      </div>
+      <div></div>
     );
   };
 
@@ -94,17 +91,139 @@ describe('TestCaseFactory', () => {
       });
     });
 
-    describe('click method', () => {
-      it('simulates a click event by calling the onClick callback', () => {
-        const onClick = jasmine.createSpy('onClick');
+    describe('trigger method', () => {
+      it('throws an error if called with an unsupported eventName', () => {
         const testCase = TestCaseFactory.createFromElement(
-          <TestElement
-            onClick={onClick}
-          />
+          <TestElement />
         );
-        expect(onClick).not.toHaveBeenCalled();
-        testCase.click();
-        expect(onClick).toHaveBeenCalled();
+        expect(() => {
+          testCase.trigger('explode');
+        }).toThrowError(/explode/);
+      });
+
+      describe('supports React TestUtils.Simulate events', () => {
+        const events = [
+          // Clipboard events
+          'onCopy',
+          'onCut',
+          'onPaste',
+
+          // Composition events
+          'onCompositionEnd',
+          'onCompositionStart',
+          'onCompositionUpdate',
+
+          // Keyboard events
+          'onKeyDown',
+          'onKeyPress',
+          'onKeyUp',
+
+          // Focus events
+          'onFocus',
+          'onBlur',
+
+          // Form events
+          'onChange',
+          'onInput',
+          'onSubmit',
+
+          // Mouse events
+          'onClick',
+          'onContextMenu',
+          'onDoubleClick',
+          'onDrag',
+          'onDragEnd',
+          'onDragEnter',
+          'onDragExit',
+          'onDragLeave',
+          'onDragOver',
+          'onDragStart',
+          'onDrop',
+          'onMouseDown',
+          'onMouseEnter',
+          'onMouseLeave',
+          'onMouseMove',
+          'onMouseOut',
+          'onMouseOver',
+          'onMouseUp',
+
+          // Selection events
+          'onSelect',
+
+          // Touch events
+          'onTouchCancel',
+          'onTouchEnd',
+          'onTouchMove',
+          'onTouchStart',
+
+          // UI events
+          'onScroll',
+
+          // Wheel events
+          'onWheel',
+
+          // Media events
+          'onAbort',
+          'onCanPlay',
+          'onCanPlayThrough',
+          'onDurationChange',
+          'onEmptied',
+          'onEncrypted',
+          'onEnded',
+          'onError',
+          'onLoadedData',
+          'onLoadedMetadata',
+          'onLoadStart',
+          'onPause',
+          'onPlay',
+          'onPlaying',
+          'onProgress',
+          'onRateChange',
+          'onSeeked',
+          'onSeeking',
+          'onStalled',
+          'onSuspend',
+          'onTimeUpdate',
+          'onVolumeChange',
+          'onWaiting',
+
+          // Image events
+          'onLoad',
+          'onError',
+        ];
+
+        function EventTestElement(props) {
+          return (
+            <div {...props}></div>
+          );
+        }
+
+        function createEventName(eventHandlerName) {
+          // Remove the leading 'on'.
+          const eventName = eventHandlerName.slice(2);
+          const sentenceCasedEventName =
+            eventName.charAt(0).toLowerCase() + eventName.slice(1);
+          return sentenceCasedEventName;
+        }
+
+        for (let i = 0; i < events.length; i++) {
+          const eventHandlerName = events[i];
+          const eventName = createEventName(eventHandlerName);
+
+          /* eslint-disable no-loop-func */
+          it(`simulates a ${eventName} event by calling the ${eventHandlerName} callback`, () => {
+            const eventHandler = jasmine.createSpy(eventHandlerName);
+
+            // Assign event handler to the normalized event property name.
+            const props = {};
+            props[eventHandlerName] = eventHandler;
+            const testCase = TestCaseFactory.createFromFunction(EventTestElement, props);
+
+            expect(eventHandler).not.toHaveBeenCalled();
+            testCase.trigger(eventName);
+            expect(eventHandler).toHaveBeenCalled();
+          });
+        }
       });
     });
 
@@ -118,6 +237,21 @@ describe('TestCaseFactory', () => {
         expect(nodes.length).toBe(2);
         expect(nodes[0].textContent).toBe('Hello');
         expect(nodes[1].textContent).toBe('Content');
+      });
+
+      it('accepts jQuery-like selector strings', () => {
+        const content = (
+          <div id="contentId">
+            <div className="content">Div</div>
+            <span className="content">Span</span>
+          </div>
+        );
+        const testCase = TestCaseFactory.createFromElement(
+          <TestElement content={content} />
+        );
+        const nodes = testCase.find('#contentId span.content');
+        expect(nodes.length).toBe(1);
+        expect(nodes[0].textContent).toBe('Span');
       });
     });
 

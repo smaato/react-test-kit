@@ -11,8 +11,15 @@ export class TestCase {
     this.dom = ReactDOM.findDOMNode(this.element);
   }
 
-  click(node = this.dom) {
-    TestUtils.Simulate.click(node);
+  trigger(eventName, node = this.dom) {
+    const action = TestUtils.Simulate[eventName];
+    if (!action || typeof action !== 'function') {
+      throw new Error(
+        `TestCase trigger method called with an eventName which isn\'t supported
+         by TestUtils.Simulate: '${eventName}'`
+      );
+    }
+    action(node);
   }
 
   // Mimic $.find()
