@@ -49,8 +49,8 @@ function createFromElement(reactElement) {
   return new TestCase(reactElement);
 }
 
-function createFromClass(reactClass, props, children) {
-  const reactElement = React.createElement(reactClass, props, children);
+function createFromClass(reactClass, props = {}) {
+  const reactElement = React.createElement(reactClass, props, props.children);
   return createFromElement(reactElement);
 }
 

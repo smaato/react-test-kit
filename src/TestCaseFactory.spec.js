@@ -23,9 +23,30 @@ describe('TestCaseFactory', () => {
     }
   }
 
+  /* eslint-disable react/no-multi-comp */
+  class ParentElement extends Component {
+    constructor(props) {
+      super(props);
+    }
+    render() {
+      return (
+        <div>
+          <div>Hello</div>
+          {this.props.children}
+        </div>
+      );
+    }
+  }
+
   const StatelessTestElement = () => {
     return (
       <div></div>
+    );
+  };
+
+  const StatelessParentElement = props => {
+    return (
+      <div>{props.children}</div>
     );
   };
 
@@ -43,35 +64,56 @@ describe('TestCaseFactory', () => {
 
   describe('factory', () => {
     describe('createFromElement method', () => {
+      const props = {
+        property1: 'value1',
+      };
+
       it('accepts a ReactElement and returns a TestCase instance', () => {
-        const props = {
-          property1: 'value1',
-        };
         const testCase = TestCaseFactory.createFromElement(<TestElement {...props} />);
         expect(testCase instanceof TestCase).toBe(true);
+      });
+
+      it('creates children from the children property', () => {
+        const testCase = TestCaseFactory.createFromElement(
+          <ParentElement {...props} >
+            <div className="child">A child</div>
+          </ParentElement>
+        );
+        expect(testCase.first('.child').textContent).toBe('A child');
       });
     });
 
     describe('createFromClass method', () => {
+      const props = {
+        property1: 'value1',
+        children: <div className="child">A child</div>,
+      };
+
       it('accepts a ReactClass and returns a TestCase instance', () => {
-        const props = {
-          property1: 'value1',
-        };
-        const children = (
-          <div>A child</div>
-        );
-        const testCase = TestCaseFactory.createFromClass(TestElement, props, children);
+        const testCase = TestCaseFactory.createFromClass(TestElement, props);
         expect(testCase instanceof TestCase).toBe(true);
+      });
+
+      it('creates children from the children property', () => {
+        const testCase = TestCaseFactory.createFromClass(ParentElement, props);
+        expect(testCase.first('.child').textContent).toBe('A child');
       });
     });
 
     describe('createFromFunction method', () => {
+      const props = {
+        property1: 'value1',
+        children: <div className="child">A child</div>,
+      };
+
       it('accepts a function and returns a TestCase instance', () => {
-        const props = {
-          property1: 'value1',
-        };
         const testCase = TestCaseFactory.createFromFunction(StatelessTestElement, props);
         expect(testCase instanceof TestCase).toBe(true);
+      });
+
+      it('creates children from the children property', () => {
+        const testCase = TestCaseFactory.createFromFunction(StatelessParentElement, props);
+        expect(testCase.first('.child').textContent).toBe('A child');
       });
     });
   });
