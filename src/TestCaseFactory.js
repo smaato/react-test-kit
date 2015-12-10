@@ -52,7 +52,7 @@ function createFromElement(reactElement) {
   }
 
   // Disallow elements created from stateless functional components.
-  if (!reactElement.type.prototype.render) {
+  if (reactElement.type.prototype && !reactElement.type.prototype.render) {
     throw new Error('createFromElement expects an instance of a React Class (i.e. a class with a render method) but no render method was found.');
   }
 
