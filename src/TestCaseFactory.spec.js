@@ -85,19 +85,19 @@ describe('TestCaseFactory', () => {
       it('throws an error when provided a class', () => {
         expect(() => {
           TestCaseFactory.createFromElement(TestElement, props);
-        }).toThrow();
+        }).toThrowError('createFromElement expects a React Element (i.e. a class instantiated via JSX) but got a function.');
       });
 
       it('throws an error when provided a stateless function', () => {
         expect(() => {
           TestCaseFactory.createFromElement(StatelessTestElement, props);
-        }).toThrow();
+        }).toThrowError('createFromElement expects a React Element (i.e. a class instantiated via JSX) but got a function.');
       });
 
       it('throws an error when provided an instance of a stateless function', () => {
         expect(() => {
           TestCaseFactory.createFromElement(<StatelessTestElement {...props} />);
-        }).toThrow();
+        }).toThrowError('createFromElement expects an instance of a React Class (i.e. a class with a render method) but no render method was found.');
       });
     });
 
@@ -120,13 +120,13 @@ describe('TestCaseFactory', () => {
       it('throws an error when provided a React Element', () => {
         expect(() => {
           TestCaseFactory.createFromClass(<TestElement {...props} />);
-        }).toThrow();
+        }).toThrowError('createFromClass expects a React Class but got an object (e.g. a React Element).');
       });
 
       it('throws an error when provided a stateless function', () => {
         expect(() => {
           TestCaseFactory.createFromClass(StatelessTestElement, props);
-        }).toThrow();
+        }).toThrowError('createFromClass expects a React Class (i.e. a class with a render method) but no render method was found.');
       });
     });
 
@@ -149,13 +149,13 @@ describe('TestCaseFactory', () => {
       it('throws an error when provided a React Element', () => {
         expect(() => {
           TestCaseFactory.createFromFunction(<TestElement/>, props);
-        }).toThrow();
+        }).toThrowError('createFromFunction expects a stateless function but got an object (e.g. a React Element).');
       });
 
       it('throws an error when provided a class', () => {
         expect(() => {
           TestCaseFactory.createFromFunction(TestElement, props);
-        }).toThrow();
+        }).toThrowError('createFromFunction expects a stateless function, but got a React Class (i.e. a class with a render method).');
       });
     });
   });
