@@ -156,6 +156,11 @@ it('references the mocked state object', (done) => {
 Use this factory to test React components' state by passing in various props,
 inspecting their DOM, and simulating user interactions.
 
+**WARNING:** Methods for finding child Components won't work unless the root
+component is a _composite Component_ (e.g. a Component you've defined), not a
+_native Component_ (e.g. div or table). This seems related to
+[this React issue](https://github.com/facebook/react/issues/1533#issuecomment-52243372).
+
 ```javascript
 // Construction via factory methods:
 it('accepts a ReactElement and returns a TestCase instance', () => {
