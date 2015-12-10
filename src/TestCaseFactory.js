@@ -46,11 +46,31 @@ export class TestCase {
 }
 
 function createFromElement(reactElement) {
+  // Disallow React Classes and stateless functional components.
+  if (typeof reactElement === 'function') {
+    throw new Error('createFromElement expects a React Element (i.e. a class instantiated via JSX) but got a function.');
+  }
+
+  // Disallow elements created from stateless functional components.
+  if (!reactElement.type.prototype.render) {
+    throw new Error('createFromElement expects an instance of a React Class (i.e. a class with a render method) but no render method was found.');
+  }
+
   return new TestCase(reactElement);
 }
 
-function createFromClass(reactClass, props, children) {
-  const reactElement = React.createElement(reactClass, props, children);
+function createFromClass(reactClass, props = {}) {
+  // Disallow React Elements.
+  if (typeof reactClass === 'object') {
+    throw new Error('createFromClass expects a React Class but got an object (e.g. a React Element).');
+  }
+
+  // Disallow stateless functional components.
+  if (!reactClass.prototype.render) {
+    throw new Error('createFromClass expects a React Class (i.e. a class with a render method) but no render method was found.');
+  }
+
+  const reactElement = React.createElement(reactClass, props, props.children);
   return createFromElement(reactElement);
 }
 
@@ -70,6 +90,16 @@ function convertToClass(statelessFunctionalComponent) {
  * Relevant issue: https://github.com/facebook/react/issues/4972
  */
 function createFromFunction(fn, props) {
+  // Disallow React Elements.
+  if (typeof fn === 'object') {
+    throw new Error('createFromFunction expects a stateless function but got an object (e.g. a React Element).');
+  }
+
+  // Disallow React Classes.
+  if (fn.prototype.render) {
+    throw new Error('createFromFunction expects a stateless function, but got a React Class (i.e. a class with a render method).');
+  }
+
   // We need to wrap the function in a class to be able to instantiate
   // and render it.
   const reactClass = convertToClass(fn);

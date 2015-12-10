@@ -23,9 +23,30 @@ describe('TestCaseFactory', () => {
     }
   }
 
+  /* eslint-disable react/no-multi-comp */
+  class ParentElement extends Component {
+    constructor(props) {
+      super(props);
+    }
+    render() {
+      return (
+        <div>
+          <div>Hello</div>
+          {this.props.children}
+        </div>
+      );
+    }
+  }
+
   const StatelessTestElement = () => {
     return (
       <div></div>
+    );
+  };
+
+  const StatelessParentElement = props => {
+    return (
+      <div>{props.children}</div>
     );
   };
 
@@ -43,35 +64,98 @@ describe('TestCaseFactory', () => {
 
   describe('factory', () => {
     describe('createFromElement method', () => {
+      const props = {
+        property1: 'value1',
+      };
+
       it('accepts a ReactElement and returns a TestCase instance', () => {
-        const props = {
-          property1: 'value1',
-        };
         const testCase = TestCaseFactory.createFromElement(<TestElement {...props} />);
         expect(testCase instanceof TestCase).toBe(true);
+      });
+
+      it('creates children from the children property', () => {
+        const testCase = TestCaseFactory.createFromElement(
+          <ParentElement {...props} >
+            <div className="child">A child</div>
+          </ParentElement>
+        );
+        expect(testCase.first('.child').textContent).toBe('A child');
+      });
+
+      it('throws an error when provided a class', () => {
+        expect(() => {
+          TestCaseFactory.createFromElement(TestElement, props);
+        }).toThrowError('createFromElement expects a React Element (i.e. a class instantiated via JSX) but got a function.');
+      });
+
+      it('throws an error when provided a stateless function', () => {
+        expect(() => {
+          TestCaseFactory.createFromElement(StatelessTestElement, props);
+        }).toThrowError('createFromElement expects a React Element (i.e. a class instantiated via JSX) but got a function.');
+      });
+
+      it('throws an error when provided an instance of a stateless function', () => {
+        expect(() => {
+          TestCaseFactory.createFromElement(<StatelessTestElement {...props} />);
+        }).toThrowError('createFromElement expects an instance of a React Class (i.e. a class with a render method) but no render method was found.');
       });
     });
 
     describe('createFromClass method', () => {
+      const props = {
+        property1: 'value1',
+        children: <div className="child">A child</div>,
+      };
+
       it('accepts a ReactClass and returns a TestCase instance', () => {
-        const props = {
-          property1: 'value1',
-        };
-        const children = (
-          <div>A child</div>
-        );
-        const testCase = TestCaseFactory.createFromClass(TestElement, props, children);
+        const testCase = TestCaseFactory.createFromClass(TestElement, props);
         expect(testCase instanceof TestCase).toBe(true);
+      });
+
+      it('creates children from the children property', () => {
+        const testCase = TestCaseFactory.createFromClass(ParentElement, props);
+        expect(testCase.first('.child').textContent).toBe('A child');
+      });
+
+      it('throws an error when provided a React Element', () => {
+        expect(() => {
+          TestCaseFactory.createFromClass(<TestElement {...props} />);
+        }).toThrowError('createFromClass expects a React Class but got an object (e.g. a React Element).');
+      });
+
+      it('throws an error when provided a stateless function', () => {
+        expect(() => {
+          TestCaseFactory.createFromClass(StatelessTestElement, props);
+        }).toThrowError('createFromClass expects a React Class (i.e. a class with a render method) but no render method was found.');
       });
     });
 
     describe('createFromFunction method', () => {
+      const props = {
+        property1: 'value1',
+        children: <div className="child">A child</div>,
+      };
+
       it('accepts a function and returns a TestCase instance', () => {
-        const props = {
-          property1: 'value1',
-        };
         const testCase = TestCaseFactory.createFromFunction(StatelessTestElement, props);
         expect(testCase instanceof TestCase).toBe(true);
+      });
+
+      it('creates children from the children property', () => {
+        const testCase = TestCaseFactory.createFromFunction(StatelessParentElement, props);
+        expect(testCase.first('.child').textContent).toBe('A child');
+      });
+
+      it('throws an error when provided a React Element', () => {
+        expect(() => {
+          TestCaseFactory.createFromFunction(<TestElement/>, props);
+        }).toThrowError('createFromFunction expects a stateless function but got an object (e.g. a React Element).');
+      });
+
+      it('throws an error when provided a class', () => {
+        expect(() => {
+          TestCaseFactory.createFromFunction(TestElement, props);
+        }).toThrowError('createFromFunction expects a stateless function, but got a React Class (i.e. a class with a render method).');
       });
     });
   });
