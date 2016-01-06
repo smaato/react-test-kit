@@ -46,6 +46,7 @@ gulp.task('lint', function() {
   ])
   .pipe(eslint())
   .pipe(eslint.format())
+  .pipe(eslint.failAfterError())
   .on('error', function(error) {
     throw 'Linting failed';
   });
