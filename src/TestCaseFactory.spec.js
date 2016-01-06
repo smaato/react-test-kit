@@ -360,6 +360,20 @@ describe('TestCaseFactory', () => {
         expect(elements.length).toBe(1);
         expect(elements[0] instanceof ChildComponent).toBe(true);
       });
+
+      it('throws an error when provided a React Element', () => {
+        const testCase = TestCaseFactory.createFromElement(<TestElement />);
+        expect(() => {
+          testCase.findComponents(<TestElement />);
+        }).toThrowError('findComponents expects a React Class but got an object (e.g. a React Element).');
+      });
+
+      it('throws an error when provided a stateless function', () => {
+        const testCase = TestCaseFactory.createFromElement(<TestElement />);
+        expect(() => {
+          testCase.findComponents(StatelessTestElement);
+        }).toThrowError('findComponents expects a React Class (i.e. a class with a render method) but no render method was found.');
+      });
     });
 
     describe('firstComponent method', () => {
@@ -370,6 +384,20 @@ describe('TestCaseFactory', () => {
         );
         const element = testCase.firstComponent(ChildComponent);
         expect(element instanceof ChildComponent).toBe(true);
+      });
+
+      it('throws an error when provided a React Element', () => {
+        const testCase = TestCaseFactory.createFromElement(<TestElement />);
+        expect(() => {
+          testCase.firstComponent(<TestElement />);
+        }).toThrowError('firstComponent expects a React Class but got an object (e.g. a React Element).');
+      });
+
+      it('throws an error when provided a stateless function', () => {
+        const testCase = TestCaseFactory.createFromElement(<TestElement />);
+        expect(() => {
+          testCase.firstComponent(StatelessTestElement);
+        }).toThrowError('firstComponent expects a React Class (i.e. a class with a render method) but no render method was found.');
       });
     });
   });
