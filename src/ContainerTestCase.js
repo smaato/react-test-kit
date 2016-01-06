@@ -9,6 +9,10 @@ export default class ContainerTestCase {
         },
       },
     });
+
+    // As of react-redux 3.0.0, mapStateToProps, and mapDispatchToProps are
+    // only called when render() is called.
+    this.container.render();
   }
 
   expectProps(props) {
