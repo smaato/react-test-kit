@@ -4,6 +4,10 @@ export {
 } from './ContainerTestCase';
 
 export {
+  default as mockFormStore,
+} from './mockFormStore';
+
+export {
   default as MockedRouteActions,
 } from './MockedRouteActions';
 

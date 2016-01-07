@@ -31,6 +31,7 @@ import {
   ContainerTestCase,
   MockedRouteActions,
   MockedStore,
+  mockFormStore,
   TestCase,
   TestCaseFactory,
 } from 'react-test-kit';
@@ -148,6 +149,61 @@ it('references the mocked state object', (done) => {
   }];
   const store = new MockedStore(state);
   store.expectActionsFromCreator(actionCreator(), expectedActions, done);
+});
+```
+
+#### mockFormStore
+
+Call this function to get a store instance that uses the `redux-form` reducer.
+
+Given a component that uses redux-form and looks something like this:
+
+```javascript
+import React, {
+  Component,
+} from 'react';
+import {reduxForm} from 'redux-form';
+
+class AccountForm extends Component {
+  // ...
+}
+
+AccountForm = reduxForm({
+  form: 'accountForm',
+  fields: [ /* ... */ ],
+})(AccountForm);
+
+export default AccountForm;
+```
+
+You can create a spec that tests it like this:
+
+```javascript
+import React from 'react';
+import { Provider } from 'react-redux';
+import {
+  TestCaseFactory,
+  mockFormStore,
+} from 'react-test-kit';
+
+import AccountForm from './AccountForm.jsx';
+
+describe('AccountForm', () => {
+  it('is testable', () => {
+    const store = mockFormStore();
+
+    const props = {
+      // ...
+    };
+
+    const testCase = TestCaseFactory.createFromElement(
+      <Provider store={store}>
+        <AccountForm {...props} />
+      </Provider>
+    );
+
+    // expect() something
+  });
 });
 ```
 
