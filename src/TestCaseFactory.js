@@ -36,10 +36,28 @@ export class TestCase {
   }
 
   findComponents(reactClass) {
+    if (typeof reactClass === 'object') {
+      throw new Error('findComponents expects a React Class but got an object (e.g. a React Element).');
+    }
+
+    // Disallow stateless functional components.
+    if (!reactClass.prototype.render) {
+      throw new Error('findComponents expects a React Class (i.e. a class with a render method) but no render method was found.');
+    }
+
     return TestUtils.scryRenderedComponentsWithType(this.element, reactClass);
   }
 
   firstComponent(reactClass) {
+    if (typeof reactClass === 'object') {
+      throw new Error('firstComponent expects a React Class but got an object (e.g. a React Element).');
+    }
+
+    // Disallow stateless functional components.
+    if (!reactClass.prototype.render) {
+      throw new Error('firstComponent expects a React Class (i.e. a class with a render method) but no render method was found.');
+    }
+
     return TestUtils.findRenderedComponentWithType(this.element, reactClass);
   }
 
