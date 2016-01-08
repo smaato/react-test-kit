@@ -176,6 +176,25 @@ describe('TestCaseFactory', () => {
     });
 
     describe('trigger method', () => {
+      class ChildEventTestComponent extends Component {
+        constructor(props) {
+          super(props);
+        }
+        render() {
+          return (
+            <div>
+              <div className="child" onClick={this.props.onClick} />
+            </div>
+          );
+        }
+      }
+
+      function EventTestElement(props) {
+        return (
+          <div {...props}></div>
+        );
+      }
+
       it('throws an error if called with an unsupported eventName', () => {
         const testCase = TestCaseFactory.createFromElement(
           <TestElement />
@@ -183,6 +202,32 @@ describe('TestCaseFactory', () => {
         expect(() => {
           testCase.trigger('explode');
         }).toThrowError(/explode/);
+      });
+
+      it('dispatches events from children in the dom', () => {
+        const onClick = jasmine.createSpy('onClick');
+        const testCase = TestCaseFactory.createFromElement(
+          <ChildEventTestComponent onClick={onClick} />
+        );
+        expect(onClick).not.toHaveBeenCalled();
+        const childEl = testCase.first('.child');
+        testCase.trigger('click', childEl);
+        expect(onClick).toHaveBeenCalled();
+      });
+
+      it('dispatches events with event data', () => {
+        const props = {
+          onClick: jasmine.createSpy('onClick'),
+        };
+
+        const eventData = {
+          name: 'testEventData',
+        };
+
+        const testCase = TestCaseFactory.createFromFunction(EventTestElement, props);
+        testCase.trigger('click', testCase.dom, eventData);
+        const event = props.onClick.calls.argsFor(0)[0];
+        expect(event.name).toEqual(eventData.name);
       });
 
       describe('supports React TestUtils.Simulate events', () => {
@@ -275,12 +320,6 @@ describe('TestCaseFactory', () => {
           'onLoad',
           'onError',
         ];
-
-        function EventTestElement(props) {
-          return (
-            <div {...props}></div>
-          );
-        }
 
         function createEventName(eventHandlerName) {
           // Remove the leading 'on'.

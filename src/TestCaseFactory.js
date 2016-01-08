@@ -11,7 +11,7 @@ export class TestCase {
     this.dom = ReactDOM.findDOMNode(this.element);
   }
 
-  trigger(eventName, node = this.dom) {
+  trigger(eventName, node = this.dom, eventData = undefined) {
     const action = TestUtils.Simulate[eventName];
     if (!action || typeof action !== 'function') {
       throw new Error(
@@ -19,7 +19,7 @@ export class TestCase {
          by TestUtils.Simulate: '${eventName}'`
       );
     }
-    action(node);
+    action(node, eventData);
   }
 
   // Mimic $.find()
