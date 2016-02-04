@@ -230,11 +230,10 @@ it('accepts a ReactElement and returns a TestCase instance', () => {
 it('accepts a ReactClass and returns a TestCase instance', () => {
   const props = {
     property1: 'value1',
+    children: <div>A child</div>,
   };
-  const children = (
-    <div>A child</div>
-  );
-  const testCase = TestCaseFactory.createFromClass(TestElement, props, children);
+  // Alternatively, you can use TestCaseFactory.createFromClass here.
+  const testCase = TestCaseFactory.create(TestElement, props);
   expect(testCase instanceof TestCase).toBe(true);
 });
 
@@ -242,7 +241,8 @@ it('accepts a function and returns a TestCase instance', () => {
   const props = {
     property1: 'value1',
   };
-  const testCase = TestCaseFactory.createFromFunction(StatelessTestElement, props);
+  // Alternatively, you can use TestCaseFactory.createFromFunction here.
+  const testCase = TestCaseFactory.create(StatelessTestElement, props);
   expect(testCase instanceof TestCase).toBe(true);
 });
 

@@ -124,7 +124,20 @@ function createFromFunction(fn, props) {
   return createFromClass(reactClass, props);
 }
 
+function create(component, props) {
+  if (component.prototype && component.prototype.render) {
+    return createFromClass(component, props);
+  }
+
+  if (typeof component === 'function') {
+    return createFromFunction(component, props);
+  }
+
+  throw new Error('create expects a stateless function or React Class. If you\'re passing in a React Element, use createFromElement.');
+}
+
 export default {
+  create: create,
   createFromElement: createFromElement,
   createFromClass: createFromClass,
   createFromFunction: createFromFunction,
