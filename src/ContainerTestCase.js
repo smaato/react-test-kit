@@ -16,7 +16,7 @@ export default class ContainerTestCase {
   }
 
   expectProps(props) {
-    const stateProps = this.container.stateProps;
+    const stateProps = Object.assign({}, this.container.stateProps);
     for (let i = 0; i < props.length; i++) {
       const prop = props[i];
       /* eslint-disable no-loop-func */
@@ -31,7 +31,7 @@ export default class ContainerTestCase {
   }
 
   expectActionCreators(actions) {
-    const dispatchProps = this.container.dispatchProps;
+    const dispatchProps = Object.assign({}, this.container.dispatchProps);
     for (let i = 0; i < actions.length; i++) {
       const action = actions[i];
       /* eslint-disable no-loop-func */
