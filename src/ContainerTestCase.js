@@ -22,8 +22,12 @@ export default class ContainerTestCase {
       /* eslint-disable no-loop-func */
       it(`has property ${prop}`, () => {
         expect(stateProps.hasOwnProperty(prop)).toBe(true);
+        delete stateProps[prop];
       });
     }
+    it('has no unexpected state props', () => {
+      expect(Object.keys(stateProps)).toEqual([]);
+    });
   }
 
   expectActionCreators(actions) {
@@ -33,8 +37,12 @@ export default class ContainerTestCase {
       /* eslint-disable no-loop-func */
       it(`has action ${action}`, () => {
         expect(typeof dispatchProps[action]).toBe('function');
+        delete dispatchProps[action];
       });
     }
+    it('has no unexpected action creator props', () => {
+      expect(Object.keys(dispatchProps)).toEqual([]);
+    });
   }
 
 }
