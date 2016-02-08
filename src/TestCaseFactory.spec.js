@@ -158,6 +158,29 @@ describe('TestCaseFactory', () => {
         }).toThrowError('createFromFunction expects a stateless function, but got a React Class (i.e. a class with a render method).');
       });
     });
+
+    describe('create method', () => {
+      const props = {
+        property1: 'value1',
+        children: <div className="child">A child</div>,
+      };
+
+      it('accepts a ReactClass and returns a TestCase instance', () => {
+        const testCase = TestCaseFactory.create(TestElement, props);
+        expect(testCase instanceof TestCase).toBe(true);
+      });
+
+      it('accepts a function and returns a TestCase instance', () => {
+        const testCase = TestCaseFactory.create(StatelessTestElement, props);
+        expect(testCase instanceof TestCase).toBe(true);
+      });
+
+      it('throws an error when provided a React Element', () => {
+        expect(() => {
+          TestCaseFactory.create(<TestElement/>, props);
+        }).toThrowError('create expects a stateless function or React Class. If you\'re passing in a React Element, use createFromElement.');
+      });
+    });
   });
 
   describe('TestCase instance', () => {
