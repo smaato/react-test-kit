@@ -10,5 +10,16 @@ describe('mockFormStore', () => {
         form: jasmine.any(Object),
       });
     });
+
+    describe('initialState param', () => {
+      it('returns a store with the specified initial state', () => {
+        const initialState = {
+          test: {},
+        };
+        const store = mockFormStore(initialState);
+        const state = store.getState();
+        expect(state).toEqual(jasmine.objectContaining(initialState));
+      });
+    });
   });
 });
