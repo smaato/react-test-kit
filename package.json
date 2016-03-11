@@ -1,7 +1,7 @@
 {
   "name": "react-test-kit",
   "private": true,
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Tools for easy testing of a React and Redux codebase",
   "main": "./src/index.js",
   "browserify": {
