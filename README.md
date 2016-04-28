@@ -1,11 +1,11 @@
 
 # React Test Kit
 
-> Tools for easy testing of a React and Redux codebase
+These tools make it easier for us to test apps built with React and Redux.
 
 ## Dependencies
 
-- Node 4.1.0
+- Node 4.x.x
 - Browserify with the Babelify transform
 - Jasmine (for some tools, see below)
 - React, react-dom, react-addons-test-utils
@@ -38,6 +38,58 @@ import {
 ```
 
 ## Tools
+
+#### TestCaseFactory
+
+Use this factory to test React components' state by passing in various props,
+inspecting their DOM, and simulating user interactions.
+
+**WARNING:** Methods for finding child Components won't work unless the root
+component is a _composite Component_ (e.g. a Component you've defined), not a
+_native Component_ (e.g. div or table). This seems related to
+[this React issue](https://github.com/facebook/react/issues/1533#issuecomment-52243372).
+
+```javascript
+// Construction via factory methods:
+it('accepts a ReactElement and returns a TestCase instance', () => {
+  const props = {
+    property1: 'value1',
+  };
+  const testCase = TestCaseFactory.createFromElement(<TestElement {...props} />);
+  expect(testCase instanceof TestCase).toBe(true);
+});
+
+it('accepts a ReactClass and returns a TestCase instance', () => {
+  const props = {
+    property1: 'value1',
+    children: <div>A child</div>,
+  };
+  // Alternatively, you can use TestCaseFactory.createFromClass here.
+  const testCase = TestCaseFactory.create(TestElement, props);
+  expect(testCase instanceof TestCase).toBe(true);
+});
+
+it('accepts a function and returns a TestCase instance', () => {
+  const props = {
+    property1: 'value1',
+  };
+  // Alternatively, you can use TestCaseFactory.createFromFunction here.
+  const testCase = TestCaseFactory.create(StatelessTestElement, props);
+  expect(testCase instanceof TestCase).toBe(true);
+});
+
+// The testCase instance surfaces a method for triggering events and simulating
+// user interaction. It supports all of the same events that React supports.
+testCase.trigger('click', optDomNode, optEventData);
+
+// You can query its DOM.
+const nodes = testCase.find('div');
+const node = testCase.first('div');
+
+// You can also query it for React components.
+const elements = testCase.findComponents(ChildComponent);
+const element = testCase.firstComponent(ChildComponent);
+```
 
 #### ContainerTestCase
 
@@ -85,27 +137,6 @@ describe('Action creators', () => {
     'action1',
     'action2',
   ]);
-});
-```
-
-#### MockedRouteActions
-
-Use this class to create `redux-router` actions for testing action creators
-that affect the route (e.g. redirects).
-
-```javascript
-const state = {};
-const pathname = '/testPath';
-const action = MockedRouteActions.replaceState(state, pathname);
-expect(action).toEqual({
-  type: '@@reduxReactRouter/historyAPI',
-  payload: {
-    method: 'replaceState',
-    args: [
-      state,
-      pathname,
-    ],
-  },
 });
 ```
 
@@ -207,53 +238,26 @@ describe('AccountForm', () => {
 });
 ```
 
-#### TestCaseFactory
+#### MockedRouteActions
 
-Use this factory to test React components' state by passing in various props,
-inspecting their DOM, and simulating user interactions.
+Use this class to create `redux-router` actions for testing action creators
+that affect the route (e.g. redirects).
 
-**WARNING:** Methods for finding child Components won't work unless the root
-component is a _composite Component_ (e.g. a Component you've defined), not a
-_native Component_ (e.g. div or table). This seems related to
-[this React issue](https://github.com/facebook/react/issues/1533#issuecomment-52243372).
+**Note:** We've since migrated to `react-router-redux` so this tool is no
+longer being supported and will be removed in the near future.
 
 ```javascript
-// Construction via factory methods:
-it('accepts a ReactElement and returns a TestCase instance', () => {
-  const props = {
-    property1: 'value1',
-  };
-  const testCase = TestCaseFactory.createFromElement(<TestElement {...props} />);
-  expect(testCase instanceof TestCase).toBe(true);
+const state = {};
+const pathname = '/testPath';
+const action = MockedRouteActions.replaceState(state, pathname);
+expect(action).toEqual({
+  type: '@@reduxReactRouter/historyAPI',
+  payload: {
+    method: 'replaceState',
+    args: [
+      state,
+      pathname,
+    ],
+  },
 });
-
-it('accepts a ReactClass and returns a TestCase instance', () => {
-  const props = {
-    property1: 'value1',
-    children: <div>A child</div>,
-  };
-  // Alternatively, you can use TestCaseFactory.createFromClass here.
-  const testCase = TestCaseFactory.create(TestElement, props);
-  expect(testCase instanceof TestCase).toBe(true);
-});
-
-it('accepts a function and returns a TestCase instance', () => {
-  const props = {
-    property1: 'value1',
-  };
-  // Alternatively, you can use TestCaseFactory.createFromFunction here.
-  const testCase = TestCaseFactory.create(StatelessTestElement, props);
-  expect(testCase instanceof TestCase).toBe(true);
-});
-
-// The testCase instance surfaces methods for simulating user interaction.
-testCase.click();
-
-// You can query its DOM.
-const nodes = testCase.find('div');
-const node = testCase.first('div');
-
-// You can also query it for React components.
-const elements = testCase.findComponents(ChildComponent);
-const element = testCase.firstComponent(ChildComponent);
 ```
