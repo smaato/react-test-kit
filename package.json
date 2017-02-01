@@ -1,7 +1,7 @@
 {
   "name": "react-test-kit",
   "private": true,
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Tools for easy testing of a React and Redux codebase",
   "main": "./src/index.js",
   "browserify": {
@@ -21,9 +21,9 @@
     "sizzle": "2.2.0"
   },
   "peerDependencies": {
-    "react": "15.0.1",
-    "react-addons-test-utils": "15.0.1",
-    "react-dom": "15.0.1"
+    "react": "^15.0.0",
+    "react-addons-test-utils": "^15.0.0",
+    "react-dom": "^15.0.0"
   },
   "devDependencies": {
     "babel-eslint": "4.1.7",
@@ -44,7 +44,7 @@
     "karma-browserify": "3.0.2",
     "karma-coverage": "0.5.0",
     "karma-jasmine": "0.3.5",
-    "karma-phantomjs-launcher": "0.1.4",
+    "karma-phantomjs-launcher": "1.0.2",
     "karma-phantomjs-shim": "1.0.0",
     "karma-threshold-reporter": "0.1.15",
     "phantomjs": "1.9.18",
