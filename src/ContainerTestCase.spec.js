@@ -5,10 +5,11 @@ import { connect } from 'react-redux';
 import { ContainerTestCase } from './index';
 
 describe('ContainerTestCase', () => {
-  function mapStateToProps(state) {
+  function mapStateToProps(state, ownProps) {
     return {
       prop1: state.reducerSource.something,
       prop2: undefined,
+      prop3: ownProps.prop3,
     };
   }
 
@@ -25,12 +26,15 @@ describe('ContainerTestCase', () => {
 
   const testCase = new ContainerTestCase(TestContainer, {
     reducerSource: {},
+  }, {
+    prop3: null,
   });
 
   describe('Props', () => {
     testCase.expectProps([
       'prop1',
       'prop2',
+      'prop3',
     ]);
   });
 

@@ -1,13 +1,14 @@
 
 export default class ContainerTestCase {
 
-  constructor(Container, state) {
+  constructor(Container, state, ownProps = {}) {
     this.container = new Container({
       store: {
         getState: () => {
           return state;
         },
       },
+      ...ownProps,
     });
 
     // As of react-redux 3.0.0, mapStateToProps, and mapDispatchToProps are
