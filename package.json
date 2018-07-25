@@ -17,7 +17,7 @@
     "react-redux": "4.4.5",
     "redux": "^3.0.0",
     "redux-form": "5.0.1",
-    "redux-thunk": "0.1.0",
+    "redux-thunk": "^0.1.0",
     "sizzle": "2.2.0"
   },
   "peerDependencies": {
