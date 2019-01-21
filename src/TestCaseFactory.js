@@ -77,6 +77,12 @@ function createFromElement(reactElement) {
   return new TestCase(reactElement);
 }
 
+function createFromElementWithWrapper(reactElement) {
+  const newElement = React.createElement('div', {children: [reactElement]});
+
+  return this.createFromElement(newElement);
+}
+
 function createFromClass(reactClass, props = {}) {
   // Disallow React Elements.
   if (typeof reactClass === 'object') {
@@ -139,6 +145,7 @@ function create(component, props) {
 export default {
   create: create,
   createFromElement: createFromElement,
+  createFromElementWithWrapper: createFromElementWithWrapper,
   createFromClass: createFromClass,
   createFromFunction: createFromFunction,
 };
