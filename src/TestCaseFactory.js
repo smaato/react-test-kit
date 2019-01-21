@@ -79,7 +79,9 @@ function createFromElement(reactElement) {
 
 function createFromElementWithWrapper(reactElement) {
   const Wrapper = React.createClass({
-    render: () => React.createElement('div', {children: this.props.children}),
+    render: function() {
+      return React.createElement('div', {children: this.props.children});
+    },
   });
 
   const newElement = React.createElement(Wrapper, {children: [reactElement]});
