@@ -80,11 +80,7 @@ function createFromElement(reactElement) {
 function createFromElementWithWrapper(reactElement) {
   const newElement = React.createElement('div', {children: [reactElement]});
 
-  const testCase = createFromElement(newElement);
-  testCase.element = testCase.element.children[0];
-  testCase.dom = ReactDOM.findDOMNode(testCase.element);
-
-  return testCase;
+  return createFromElement(newElement);
 }
 
 function createFromClass(reactClass, props = {}) {
