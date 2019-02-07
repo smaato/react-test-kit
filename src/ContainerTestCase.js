@@ -17,32 +17,35 @@ export default class ContainerTestCase {
   }
 
   expectProps(props) {
-    const stateProps = Object.assign({}, this.container.stateProps);
-    for (let i = 0; i < props.length; i++) {
-      const prop = props[i];
+    const statePropsRemaining = props.reduce((statePropsAcc, propItem) => {
       /* eslint-disable no-loop-func */
-      it(`has property ${prop}`, () => {
-        expect(stateProps.hasOwnProperty(prop)).toBe(true);
-        delete stateProps[prop];
+      it(`has property ${propItem}`, () => {
+        expect(statePropsAcc.hasOwnProperty(propItem)).toBe(true);
       });
-    }
+
+      const statePropsAccNext = Object.assign({}, statePropsAcc);
+      delete statePropsAccNext[propItem];
+      return statePropsAccNext;
+    }, Object.assign({}, this.container.stateProps));
+
     it('has no unexpected state props', () => {
-      expect(Object.keys(stateProps)).toEqual([]);
+      expect(Object.keys(statePropsRemaining)).toEqual([]);
     });
   }
 
   expectActionCreators(actions) {
-    const dispatchProps = Object.assign({}, this.container.dispatchProps);
-    for (let i = 0; i < actions.length; i++) {
-      const action = actions[i];
-      /* eslint-disable no-loop-func */
-      it(`has action ${action}`, () => {
-        expect(typeof dispatchProps[action]).toBe('function');
-        delete dispatchProps[action];
+    const dispatchPropsRemaining = actions.reduce((dispatchPropsAcc, actionItem) => {
+      it(`has action ${actionItem}`, () => {
+        expect(typeof dispatchPropsAcc[actionItem]).toBe('function');
       });
-    }
+
+      const dispatchPropsNext = Object.assign({}, dispatchPropsAcc);
+      delete dispatchPropsNext[actionItem];
+      return dispatchPropsNext;
+    }, Object.assign({}, this.container.dispatchProps));
+
     it('has no unexpected action creator props', () => {
-      expect(Object.keys(dispatchProps)).toEqual([]);
+      expect(Object.keys(dispatchPropsRemaining)).toEqual([]);
     });
   }
 
