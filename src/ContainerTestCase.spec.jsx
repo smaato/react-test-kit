@@ -21,8 +21,7 @@ describe('ContainerTestCase', () => {
     return bindActionCreators(actions, dispatch);
   }
 
-  const TestContainer = connect(mapStateToProps, mapDispatchToProps)(() => {
-  });
+  const TestContainer = connect(mapStateToProps, mapDispatchToProps)(() => null);
 
   const testCase = new ContainerTestCase(TestContainer, {
     reducerSource: {},
