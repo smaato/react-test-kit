@@ -1,7 +1,7 @@
 
 export {
   default as ContainerTestCase,
-} from './ContainerTestCase';
+} from './ContainerTestCase.jsx';
 
 export {
   default as mockFormStore,

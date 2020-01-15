@@ -83,11 +83,6 @@ function createFromElementWithWrapper(reactElement) {
       return React.createElement('div', {children: this.props.children});
     }
   }
-  // const Wrapper = React.createClass({
-  //   render: function() {
-  //     return React.createElement('div', {children: this.props.children});
-  //   },
-  // });
 
   const newElement = React.createElement(Wrapper, {children: [reactElement]});
 
@@ -119,11 +114,6 @@ function convertToClass(statelessFunctionalComponent) {
     }
   }
   return StatelessComponent;
-  // return React.createClass({
-  //   render: function render() {
-  //     return statelessFunctionalComponent(this.props);
-  //   },
-  // });
 }
 
 /**
