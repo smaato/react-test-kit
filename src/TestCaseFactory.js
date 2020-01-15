@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import TestUtils from 'react-addons-test-utils';
+import TestUtils from 'react-dom/test-utils';
 import Sizzle from 'sizzle';
 
 export class TestCase {
@@ -78,11 +78,11 @@ function createFromElement(reactElement) {
 }
 
 function createFromElementWithWrapper(reactElement) {
-  const Wrapper = React.createClass({
-    render: function() {
+  class Wrapper extends React.Component {
+    render() {
       return React.createElement('div', {children: this.props.children});
-    },
-  });
+    }
+  }
 
   const newElement = React.createElement(Wrapper, {children: [reactElement]});
 
@@ -108,11 +108,12 @@ function createFromClass(reactClass, props = {}) {
  * Wrap a stateless functional component in a regular component class.
  */
 function convertToClass(statelessFunctionalComponent) {
-  return React.createClass({
-    render: function render() {
+  class StatelessComponent extends React.Component {
+    render() {
       return statelessFunctionalComponent(this.props);
-    },
-  });
+    }
+  }
+  return StatelessComponent;
 }
 
 /**

@@ -1,19 +1,20 @@
 
+import React from 'react';
+import TestUtils from 'react-dom/test-utils';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+
 export default class ContainerTestCase {
 
   constructor(Container, state, ownProps = {}) {
-    this.container = new Container({
-      store: {
-        getState: () => {
-          return state;
-        },
-      },
-      ...ownProps,
-    });
+    const store = createStore(() => state);
+    const testElement = (
+      <Provider store={store} >
+        <Container {...ownProps} />
+      </Provider>
+    );
 
-    // As of react-redux 3.0.0, mapStateToProps, and mapDispatchToProps are
-    // only called when render() is called.
-    this.container.render();
+    TestUtils.renderIntoDocument(testElement);
   }
 
   expectProps(props) {
